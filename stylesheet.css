@@ -1,0 +1,22 @@
+.button-container button {
+    background-color: #04AA6D;
+    border: 1px solid green;
+    color: white;
+    padding: 10px 24px;
+    cursor: pointer;
+    float: left;
+}
+
+.button-container button:not(:last-child) {
+    border-right: none;
+}
+
+.button-container:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.button-container button:hover {
+    background-color: #3e8e41;
+}
