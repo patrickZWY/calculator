@@ -1,3 +1,4 @@
+/*
 let currentInput = '';
 let number1 = null;
 let number2 = null;
@@ -105,3 +106,122 @@ function initializeEventHandlers() {
 initializeEventHandlers();
 handleNumberClick();
 handleOperatorClick();
+*/
+
+// an OOD approach
+
+class Calculator {
+    constructor() {
+        this.currentInput = "";
+        this.number1 = null;
+        this.number2 = null;
+        this.currentOperator = null;
+        this.shouldResetScreen = false;
+
+        this.initializeEventHandlers();
+    }
+
+    resetScreen() {
+        display.textContent = '';
+        this.currentInput = '';
+        this.shouldResetScreen = false;
+    }
+
+    updateDisplay(value) {
+        if (display.textContent === '0' || this.shouldResetScreen) this.resetScreen();
+        display.textContent += value;
+        this.currentInput += value;
+    }
+
+    handleNumberClick() {
+        const digits = document.querySelectorAll('.digit');
+        digits.forEach(button => {
+            button.addEventListener('click', () => {
+                this.updateDisplay(button.textContent);
+            });
+        });
+    }
+
+    handleOperatorClick() {
+        const operators = document.querySelectorAll('.button-container button');
+        operators.forEach(button => {
+            button.addEventListener('click', () => {
+                if (!this.currentInput) return;
+                if (this.currentOperator != null) {
+                    this.operate();
+                }
+                this.number1 = parseFloat(this.currentInput);
+                this.currentOperator = button.textContent;
+                this.shouldResetScreen = true;
+            });
+        });
+    }
+
+    add(num1, num2) {
+        return num1 + num2;
+    }
+
+    subtract(num1, num2) {
+        return num1 - num2;
+    }
+
+    multiply(num1, num2) {
+        return num1 * num2;
+    }
+
+    divide(num1, num2) {
+        if (num2 === 0) {
+            alert("Division by 0 is forbidden!");
+            this.clear();
+            return null;
+        } else {
+            return (num1 / num2).toFixed(3);
+        }
+    }
+
+    operate() {
+        if (this.currentOperator === null || !this.currentInput) return;
+        this.number2 = parseFloat(this.currentInput);
+        let result;
+        switch (this.currentOperator) {
+            case '+':
+                result = this.add(this.number1, this.number2);
+                break;
+            case '-':
+                result = this.subtract(this.number1, this.number2);
+                break;
+            case 'x':
+                result = this.multiply(this.number1, this.number2);
+                break;
+            case '/':
+                result = this.divide(this.number1, this.number2);
+                if (result === null) return;
+                break;
+            default:
+                alert("Operator Unknown!");
+                return;
+        }
+        display.textContent = Math.round(result * 1000) / 1000;
+        this.currentInput = result.toString();
+        this.currentOperator = null;
+    }
+
+    clear() {
+        this.currentInput = '';
+        this.number1 = null;
+        this.number2 = null;
+        this.currentOperator = null;
+        display.textContent = '0';
+    }
+
+    initializeEventHandlers() {
+        document.getElementById('equal').addEventListener('click', () => 
+            this.operate());
+        document.getElementById('clear').addEventListener('click', () => 
+            this.clear());
+        this.handleNumberClick();
+        this.handleOperatorClick();   
+    }  
+}
+
+const calc = new Calculator();
