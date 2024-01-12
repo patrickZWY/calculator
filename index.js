@@ -137,6 +137,7 @@ class Calculator {
         const digits = document.querySelectorAll('.digit');
         digits.forEach(button => {
             button.addEventListener('click', () => {
+                if (button.textContent === '.' && this.currentInput.includes('.')) return;
                 this.updateDisplay(button.textContent);
             });
         });
@@ -214,11 +215,45 @@ class Calculator {
         display.textContent = '0';
     }
 
+    backspace() {
+        this.currentInput = this.currentInput.slice(0, -1);
+        display.textContent = this.currentInput || '0';
+    }
+
+    handleKeyboardInput(event) {
+        if (event.key >= '0' && event.key <= '9') {
+            this.updateDisplay(event.key);
+        } else if (event.key === ".") {
+            if (!this.currentInput.includes('.')) {
+                this.updateDisplay(event.key);
+            }
+        } else if (['+', '-', '*', '/'].includes(event.key)) {
+            this.handleOperator(event.key);
+        } else if (event.key === "Enter") {
+            this.operate();
+        } else if (event.key === "Backspace") {
+            this.backspace();
+        }
+        event.preventDefault();
+    }
+
+    handleOperator(key) {
+        if (!this.currentInput) return;
+        if (this.currentOperator != null) {
+            this.operate();
+        }
+        this.number1 = parseFloat(this.currentInput);
+        this.currentOperator = key;
+        this.shouldResetScreen = true;
+    }
+
     initializeEventHandlers() {
         document.getElementById('equal').addEventListener('click', () => 
             this.operate());
         document.getElementById('clear').addEventListener('click', () => 
             this.clear());
+        document.getElementById('backspace').addEventListener('click', () => this.backspace());
+        document.addEventListener('keydown', (event) => this.handleKeyboardInput(event));
         this.handleNumberClick();
         this.handleOperatorClick();   
     }  
