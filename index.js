@@ -128,6 +128,7 @@ class Calculator {
     }
 
     updateDisplay(value) {
+        // checking 0 prevents display of numbers like 0123 which should be 123
         if (display.textContent === '0' || this.shouldResetScreen) this.resetScreen();
         display.textContent += value;
         this.currentInput += value;
@@ -137,6 +138,7 @@ class Calculator {
         const digits = document.querySelectorAll('.digit');
         digits.forEach(button => {
             button.addEventListener('click', () => {
+                // prevent the repetition of decimal points
                 if (button.textContent === '.' && this.currentInput.includes('.')) return;
                 this.updateDisplay(button.textContent);
             });
@@ -173,7 +175,9 @@ class Calculator {
     divide(num1, num2) {
         if (num2 === 0) {
             alert("Division by 0 is forbidden!");
+            // clear data so that user can try others next
             this.clear();
+            // matching operate() checking null later
             return null;
         } else {
             return (num1 / num2).toFixed(3);
@@ -202,6 +206,8 @@ class Calculator {
                 alert("Operator Unknown!");
                 return;
         }
+        // if result is int with trailing decimal, it will just be int
+        // if result is float, it stays float
         display.textContent = Math.round(result * 1000) / 1000;
         this.currentInput = result.toString();
         this.currentOperator = null;
@@ -216,7 +222,11 @@ class Calculator {
     }
 
     backspace() {
+        // slice(0, -1) removes the last input
         this.currentInput = this.currentInput.slice(0, -1);
+        // if left side is falsy, value is set to '0'
+        // make sure the display doesn't show falsy things such
+        // as undefined, NaN, etc...
         display.textContent = this.currentInput || '0';
     }
 
@@ -234,6 +244,7 @@ class Calculator {
         } else if (event.key === "Backspace") {
             this.backspace();
         }
+        // to prevent default actions caused by '/' for example
         event.preventDefault();
     }
 

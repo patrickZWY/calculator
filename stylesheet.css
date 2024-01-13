@@ -42,14 +42,6 @@ button {
     flex: 1 0 21%; 
 }
 
-#clear, .digit-container .digit:first-child {
-    order: -1; 
-}
-
-.digit-container .digit:first-child {
-    flex: 2 0 46%; 
-}
-
 .button-container button {
     background-color: #04AA6D;
     color: white;
@@ -59,13 +51,27 @@ button {
     background-color: #3e8e41;
 }
 
-#equal, #clear {
+.function-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.function-container button {
+    margin: 2px;
+    flex: 1 0 auto;
+    width: 95%;
+}
+
+#equal, #clear, #backspace {
     background-color: #f44336;
     color: white;
     width: 95%;
 }
 
-#equal:hover, #clear:hover {
+#equal:hover, #clear:hover, #backspace:hover {
     background-color: #d32f2f;
 }
 
